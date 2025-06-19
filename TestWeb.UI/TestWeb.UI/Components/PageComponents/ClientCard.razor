@@ -1,0 +1,17 @@
+﻿@using TestWeb.UI.Models
+
+<MudCard Class="client-card mb-4 ml-4" Elevation="2">
+    <MudCardContent>
+        <MudText Typo="Typo.h5" Align="Align.Left" Class="client-name mb-2">
+            @Employee?.EmployeeName
+        </MudText>
+
+        <MudText Typo="Typo.h6" Align="Align.Left" Class="client-initials mb-2">
+            @Employee?.Initials
+        </MudText>
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter] public BusinessExternalEmployee? Employee  { get; set; }
+}

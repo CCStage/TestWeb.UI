@@ -1,0 +1,68 @@
+﻿.client-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 12px;
+    max-width: fit-content;
+}
+
+    .client-card:hover {
+        transform: scale(1.02);
+    }
+
+.client-name .mud-expansion-panel-header {
+    background-color: #EA862D !important;
+    color: white;
+    padding: 2px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: left;
+    font-size: 1.1rem;
+}
+
+.client-initials {
+    color: #333;
+    padding: 2px;
+    border-radius: 4px;
+    font-weight: 300;
+    text-align: left;
+    font-size: 1rem;
+}
+
+.clients-list {
+    display: flex;
+    flex-direction:column ;
+    gap: 5px;
+    align-items: flex-start;
+    padding: 2px;
+}
+
+.divider {
+    margin: 20px 0;
+    border-top: 1px solid #ddd;
+}
+
+.app-bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.drawer-links {
+    font-weight: bolder;
+    color: #f88c24;
+    font-size: 1.2rem;
+}
+
+.nav-accent-bar {
+    height: 66px;
+    background-color: #EA862D;
+    width: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 16px;
+    font-weight: bold;
+    font-size: 1.3rem;
+}

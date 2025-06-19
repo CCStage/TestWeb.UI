@@ -1,0 +1,49 @@
+﻿@page "/clients"
+@using TestWeb.UI.Models
+@inject HttpClient Http
+@using MudBlazor
+
+<MudText Typo="Typo.h4" Align="Align.Center" Class="mb-5 mt-5">Clients</MudText>
+<div class="divider"></div>
+
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <MudAlert Severity="Severity.Error">@errorMessage</MudAlert>
+}
+
+else if (employees == null || employees.Count == 0)
+{
+    <MudText Align="Align.Center">No employees found.</MudText>
+}
+
+else
+{
+    <MudExpansionPanels MultiExpansion="true" Elevation="1">
+        @foreach (var emp in employees)
+        {
+            <MudExpansionPanel Text="@emp.EmployeeName" DisableRipple="true">
+                <MudText>Identifier: @emp.Identifier</MudText>
+            </MudExpansionPanel>
+        }
+    </MudExpansionPanels>
+}
+
+@code {
+    private List<BusinessExternalEmployee> employees = new();
+    private string? errorMessage;
+
+    private const string EmployeeApiUrl = "https://run.mocky.io/v3/95b6b0d3-8f1f-4eb7-bfc5-10e0d642ca3b";
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            employees = await Http.GetFromJsonAsync<List<BusinessExternalEmployee>>(EmployeeApiUrl) ?? new();
+        }
+
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading employees: {ex.Message}";
+        }
+    }
+}

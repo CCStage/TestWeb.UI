@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\stage\\source\\repos\\TestWeb.UI\\TestWeb.UI\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\TestWeb.UI.bundle.scp.css",
+      "PackagePath": "staticwebassets\\TestWeb.UI.vnrs61qn12.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\stage\\source\\repos\\TestWeb.UI\\TestWeb.UI\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\stage\\source\\repos\\TestWeb.UI\\TestWeb.UI\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\stage\\source\\repos\\TestWeb.UI\\TestWeb.UI\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\stage\\source\\repos\\TestWeb.UI\\TestWeb.UI\\wwwroot\\css\\styles.css",
+      "PackagePath": "staticwebassets\\css\\styles.css"
+    },
+    {
+      "Id": "C:\\Users\\stage\\source\\repos\\TestWeb.UI\\TestWeb.UI\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.TestWeb.UI.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.TestWeb.UI.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.TestWeb.UI.props",
+      "PackagePath": "build\\TestWeb.UI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.TestWeb.UI.props",
+      "PackagePath": "buildMultiTargeting\\TestWeb.UI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.TestWeb.UI.props",
+      "PackagePath": "buildTransitive\\TestWeb.UI.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

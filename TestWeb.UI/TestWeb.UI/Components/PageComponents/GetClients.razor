@@ -1,0 +1,13 @@
+﻿@using TestWeb.UI.Models
+@using TestWeb.UI.Components.PageComponents
+
+<div class="clients-list mt-6">
+    @foreach (var employee in Employees)
+    {
+        <ClientCard Employee="employee" />
+    }
+</div>
+
+@code {
+    [Parameter] public List<BusinessExternalEmployee> Employees { get; set; }
+}
