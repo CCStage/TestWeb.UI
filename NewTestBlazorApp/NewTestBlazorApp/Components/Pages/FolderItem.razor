@@ -1,0 +1,34 @@
+﻿@using NewTestBlazorApp.Models
+@using Microsoft.AspNetCore.Components
+
+<li>
+    <div class="folder-item">
+        <button @onclick="ToggleExpand">
+            @if (Folder.IsExpanded)
+            {
+                <span>▼</span>
+            }
+            else
+            {
+                <span>▶</span>
+            }
+        </button>
+        <span>@Folder.DossierFolderName</span>
+    </div>
+
+    @if (Folder.IsExpanded && Folder.SubFolders.Any())
+    {
+        <ul>
+            @foreach (var subFolder in Folder.SubFolders)
+            {
+                <FolderItem Folder="subFolder" />
+            }
+        </ul>
+    }
+</li>
+
+@code {
+    [Parameter] public BusinessDossierFolder Folder { get; set; }
+
+    private void ToggleExpand() => Folder.IsExpanded = !Folder.IsExpanded;
+}

@@ -1,0 +1,187 @@
+﻿@page "/foldersmud"
+@using MudBlazor
+@inject ISnackbar Snackbar
+
+<MudTreeView T="Folder" Items="@BuildTree(folders)" Hover="true">
+    <ItemTemplate>
+        <MudTreeViewItem Text="@context.Value.Name" Icon="@Icons.Material.Filled.Folder">
+            @foreach (var subFolder in context.Children)
+            {
+                <MudTreeViewItem Text="@subFolder.Value.Name" Icon="@Icons.Material.Filled.Folder" />
+            }
+        </MudTreeViewItem>
+    </ItemTemplate>
+</MudTreeView>
+
+
+<MudTextField @bind-Value="newFolderName" Label="Folder Name" />
+<MudSelect T="Guid?" @bind-Value="selectedParentFolderId" Label="Parent Folder">
+    <MudSelectItem T="Guid?" Value="null">Root Folder</MudSelectItem>
+    @foreach (var folder in folders)
+    {
+        <MudSelectItem T="Guid?" Value="@folder.Id">@folder.Name</MudSelectItem>
+    }
+</MudSelect>
+<MudButton OnClick="CreateFolder" Color="Color.Primary">Create Folder</MudButton>
+
+@code {
+    public class Folder
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string? Name { get; set; }
+        public Guid? ParentFolderId { get; set; }
+        public List<Folder> SubFolders { get; set; } = new();
+    }
+
+    private string? newFolderName;
+    private Guid? selectedParentFolderId;
+    private readonly List<Folder> folders = new();
+    private HashSet<Guid> expandedFolders = new();
+
+    private void CreateFolder()
+    {
+        if (string.IsNullOrWhiteSpace(newFolderName))
+        {
+            Snackbar.Add("Folder name cannot be empty.", Severity.Error);
+            return;
+        }
+
+        var newFolder = new Folder
+            {
+                Name = newFolderName,
+                ParentFolderId = selectedParentFolderId
+            };
+
+        if (selectedParentFolderId == null)
+        {
+            folders.Add(newFolder);
+        }
+        else
+        {
+            var parentFolder = FindFolderById(selectedParentFolderId.Value);
+            parentFolder?.SubFolders.Add(newFolder);
+        }
+
+        newFolderName = string.Empty;
+    }
+
+    private Folder? FindFolderById(Guid folderId)
+    {
+        return folders.FirstOrDefault(f => f.Id == folderId)
+               ?? folders.SelectMany(f => f.SubFolders)
+                         .FirstOrDefault(f => f.Id == folderId);
+    }
+
+    private Folder? FindFolderByIdRecursive(List<Folder> folderList, Guid folderId)
+    {
+        foreach (var folder in folderList)
+        {
+            if (folder.Id == folderId) return folder;
+            var subFolder = FindFolderByIdRecursive(folder.SubFolders, folderId);
+            if (subFolder != null) return subFolder;
+        }
+        return null;
+    }
+
+    private void ToggleFolder(Guid folderId)
+    {
+        if (expandedFolders.Contains(folderId))
+            expandedFolders.Remove(folderId);
+        else
+            expandedFolders.Add(folderId);
+    }
+
+    private void HandleFolderEnter(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            CreateFolder();
+    }
+
+    private IEnumerable<Folder> GetAllFolders(IEnumerable<Folder> folderList)
+    {
+        foreach (var folder in folderList)
+        {
+            yield return folder;
+            foreach (var subFolder in GetAllFolders(folder.SubFolders))
+            {
+                yield return subFolder;
+            }
+        }
+    }
+
+    private RenderFragment RenderFolder(Folder folder) => builder =>
+    {
+        int seq = 0;
+        builder.OpenElement(seq++, "li");
+        builder.AddAttribute(seq++, "class", "folder-item");
+
+        // Toggle Button
+        builder.OpenElement(seq++, "button");
+        builder.AddAttribute(seq++, "class", "folder-toggle-btn");
+        builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => ToggleFolder(folder.Id)));
+        builder.AddContent(seq++, expandedFolders.Contains(folder.Id) ? "▼" : "▶");
+        builder.CloseElement();
+
+        // Folder Name
+        builder.AddContent(seq++, $" 📁 {folder.Name}");
+
+        // Render Subfolders if expanded
+        if (expandedFolders.Contains(folder.Id) && folder.SubFolders.Any())
+        {
+            builder.OpenElement(seq++, "ul");
+            foreach (var subFolder in folder.SubFolders)
+            {
+                builder.AddContent(seq++, RenderFolder(subFolder));
+            }
+            builder.CloseElement();
+        }
+
+        builder.CloseElement();
+    };
+
+    private IReadOnlyCollection<TreeItemData<Folder>> BuildTree(IEnumerable<Folder> folders)
+    {
+        var treeItems = new List<TreeItemData<Folder>>();
+
+        foreach (var folder in folders.Where(f => f.ParentFolderId == null))
+        {
+            var treeItem = new TreeItemData<Folder>
+                {
+                    Value = folder,
+                    Children = BuildSubFolders(folder.SubFolders)
+                };
+            treeItems.Add(treeItem);
+        }
+
+        return treeItems;
+    }
+    private void AddSubFolder(Folder parentFolder, string subFolderName)
+    {
+        var newSubFolder = new Folder
+    {
+        Name = subFolderName,
+        ParentFolderId = parentFolder.Id
+    };
+        parentFolder.SubFolders.Add(newSubFolder);
+    }
+
+
+    private List<TreeItemData<Folder>> BuildSubFolders(IEnumerable<Folder> subFolders)
+    {
+        var subItems = new List<TreeItemData<Folder>>();
+
+        foreach (var subFolder in subFolders)
+        {
+            var subItem = new TreeItemData<Folder>
+                {
+                    Value = subFolder,
+                    Children = BuildSubFolders(subFolder.SubFolders)
+                };
+            subItems.Add(subItem);
+        }
+
+        return subItems;
+    }
+
+    
+}

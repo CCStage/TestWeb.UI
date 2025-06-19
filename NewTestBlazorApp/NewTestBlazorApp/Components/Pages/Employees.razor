@@ -1,0 +1,92 @@
+﻿@page "/employees"
+@using MudBlazor
+@using NewTestBlazorApp.BogusGeneration
+@using NewTestBlazorApp.Models
+
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h5" GutterBottom="true">View Employees and their folders</MudText>
+    <MudText Typo="Typo.subtitle1">Click on an employee name to perform an action</MudText>
+
+    <MudDivider Class="my-2" />
+
+    <MudList T="string" Dense="true">
+        <MudListItem @onclick="ToggleUserList" Style="cursor:pointer;">
+            <MudStack Row="true" AlignItems="AlignItems.Center">
+                <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Primary" />
+                <MudText Typo="Typo.h5" FontWeight="FontWeight.Bold">Employees</MudText>
+            </MudStack>
+        </MudListItem>
+    </MudList>
+
+    @if (isEmployeeListVisible)
+    {
+        <MudList T="BusinessExternalEmployee" Dense="true">
+            @foreach (var emp in employees)
+            {
+                <MudListItem @onclick="@(() => OnEmployeeClicked(emp))" Style="cursor:pointer;">
+                    <MudText Typo="Typo.subtitle2">@emp.EmployeeName</MudText>
+                </MudListItem>
+            }
+        </MudList>
+    }
+
+    @if (!string.IsNullOrEmpty(selectedEmployeeName))
+    {
+        <MudAlert Severity="Severity.Info" Class="mt-3">
+            You clicked: <b>@selectedEmployeeName</b>
+        </MudAlert>
+    }
+
+    <MudDivider Class="my-4" />
+
+    <MudText Typo="Typo.h6">Generated Documents</MudText>
+
+    <MudTable Items="documents" Hover="true" Dense="true" Elevation="1" Class="mt-2">
+        <HeaderContent>
+            <MudTh>ID</MudTh>
+            <MudTh>Document Name</MudTh>
+            <MudTh>Size (Bytes)</MudTh>
+            <MudTh>Extension</MudTh>
+            <MudTh>Identifier</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.ID</MudTd>
+            <MudTd DataLabel="Document Name">@context.DocumentName</MudTd>
+            <MudTd DataLabel="Size">@context.SizeInBytes</MudTd>
+            <MudTd DataLabel="Extension">@context.Extension</MudTd>
+            <MudTd DataLabel="Identifier">@context.Identifier</MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudPaper>
+
+@code {
+    private List<BusinessExternalEmployee> employees = new();
+    private List<BusinessDocument> documents = new();
+    private List<BusinessDossierFolder> folders = new();
+    private string? selectedEmployeeName;
+    private bool isEmployeeListVisible = false;
+
+    // protected override void OnInitialized()
+    // {
+    //     var bogusGenerator = new BogusUserGeneration();
+    //     bogusGenerator.BogusUsers();
+    //     employees = bogusGenerator.GetEmployees();
+
+    //     var docGenerator = new BogusDocumentGeneration();
+    //     docGenerator.BogusDocuments(); 
+    //     documents = docGenerator.GetDocuments();
+
+    //     var folderGenerator = new BogusFolderGeneration();
+    //     folderGenerator.BogusFolders();
+    // }
+
+    private void OnEmployeeClicked(BusinessExternalEmployee emp)
+    {
+        selectedEmployeeName = emp.EmployeeName;
+    }
+
+    private void ToggleUserList()
+    {
+        isEmployeeListVisible = !isEmployeeListVisible;
+    }
+}

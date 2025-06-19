@@ -1,0 +1,65 @@
+﻿@page "/folders"
+@rendermode InteractiveAuto
+@using Microsoft.AspNetCore.Components.Web
+@using NewTestBlazorApp.BogusGeneration
+@using NewTestBlazorApp.Models
+@using NewTestBlazorApp.Services
+@inject FolderService FolderService
+@inject GeneralBogusDataGeneration DataGenerator
+@inject GeneralBogusDataGeneration DataGenerator
+
+<ul class="folder-list">
+    @foreach (var folder in DataGenerator.GetFolders())
+    {
+        @RenderFolder(folder)
+    }
+</ul>
+
+@code {
+    protected override void OnInitialized()
+    {
+        DataGenerator.BogusEmployees();
+        DataGenerator.BogusDossiers();
+        DataGenerator.BogusFolders();
+    }
+ 
+    private RenderFragment RenderFolder(BusinessDossierFolder folder) => builder =>
+    {
+        int seq = 0;
+
+        builder.OpenElement(seq++, "li");
+        builder.AddAttribute(seq++, "class", "folder-item");
+
+        builder.OpenElement(seq++, "div");
+        builder.AddAttribute(seq++, "class", "folder-line");
+
+        builder.OpenElement(seq++, "button");
+        builder.AddAttribute(seq++, "class", "folder-toggle-btn");
+        builder.AddAttribute(seq++, "onclick", EventCallback.Factory.Create(this, () => FolderService.ToggleFolder(folder.ID)));
+        builder.AddContent(seq++, FolderService.ExpandedFolders.Contains(folder.ID) ? "▼" : "▶");
+        builder.CloseElement();
+
+        builder.AddContent(seq++, $" 📁 {folder.DossierFolderName}");
+        builder.CloseElement();
+
+        if (FolderService.FolderIdAwaitingSubfolder == folder.ID)
+        {
+            builder.OpenElement(seq++, "div");
+            builder.AddAttribute(seq++, "class", "subfolder-input");
+
+            builder.OpenElement(seq++, "input");
+            builder.AddAttribute(seq++, "placeholder", "Subfolder name...");
+            builder.AddAttribute(seq++, "value", FolderService.SubfolderNames.GetValueOrDefault(folder.ID));
+            builder.AddAttribute(seq++, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, e =>
+            {
+                FolderService.SubfolderNames[folder.ID] = e.Value?.ToString() ?? "";
+            }));
+            builder.SetUpdatesAttributeName("value");
+            builder.CloseElement();
+
+            builder.CloseElement();
+        }
+
+        builder.CloseElement();
+    };
+}

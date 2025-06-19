@@ -1,0 +1,13 @@
+﻿@using NewTestBlazorApp.Models
+@using Microsoft.AspNetCore.Components
+
+<ul>
+    @foreach (var folder in Folders)
+    {
+        <FolderItem Folder="folder" />
+    }
+</ul>
+
+@code {
+    [Parameter] public List<BusinessDossierFolder> Folders { get; set; }
+}
